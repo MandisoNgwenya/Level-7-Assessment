@@ -5,12 +5,12 @@
       <h1 v-else>Edit blog post</h1>
     </v-col>
 
-    <v-row>
-      <v-row>
+ 
+      <v-row >
         <v-col cols="12" md="6">
-          <v-card class="p-5">
+          <v-card class="p-5 m-5">
             <v-col cols="12" md="12">
-              <div class="mb-5">
+              <div >
                 <v-btn
                   role="button"
                   width="100%"
@@ -84,21 +84,13 @@
                   v-model="form.tags"
                 ></v-textarea>
               </v-col>
-              <v-col cols="12" md="6">
-                Upload
-                <!-- <DropZone
-          v-if="form"
-          class="dropzone-placeholder"
-          :maxFiles="10"
-          maxFileSize="600000000"
-          url="/admin-action"
-          :uploadOnDrop="true"
-          :multipleUpload="true"
-          :parallelUpload="1"
-          :headers="{ action: 'upload-images', post_id: form.id }"
-          style="width: 100%"
-          @uploaded="uploaded"
-        /> -->
+              <v-col cols="12" md="12">
+             
+     <v-file-input
+    label="Thumbnail"
+    prepend-icon="mdi-camera"
+    variant="filled"
+  ></v-file-input>
               </v-col>
               <v-col cols="12" md="12">
                 <div class="row">
@@ -118,37 +110,8 @@
                           class="cat-image"
                         ></v-img>
 
-                        <div class="col-md-12 mt-5">
-                          <label>Thumbnail image</label>
-                          <input
-                            type="checkbox"
-                            class="ml-2 mb-2"
-                            @click="setImage('thumbnail_image', image, index)"
-                            v-model="thumbnail_image[index]"
-                            :checked="image.thumbnail_image === 1"
-                          />
-                        </div>
-
-                        <div class="col-md-12">
-                          <label> Main image </label
-                          ><input
-                            type="checkbox"
-                            class="ml-2 mb-2"
-                            @click="setImage('main_image', image, index)"
-                            v-model="main_image[index]"
-                            :checked="image.main_image === 1"
-                          />
-                        </div>
-                        <div class="col-md-12">
-                          <label> Excerpt image </label>
-                          <input
-                            type="checkbox"
-                            class="ml-2 mb-2"
-                            @change="setImage('excerpt_image', image, index)"
-                            v-model="excerpt_image[index]"
-                            :checked="image.excerpt_image === 1"
-                          />
-                        </div>
+                     
+                       
                       </div>
                     </v-card>
                   </div>
@@ -158,27 +121,12 @@
                 <div style="margin-top: 25px">
                   <label>Excerpt (Max characters 150) </label>
                   <TiptapEditor> </TiptapEditor>
-
-                  <!--                        <div class="2 mb-2"><small style="color:red">{{eMessage}}</small></div>-->
-                  <!-- <QuillEditor
-            v-model="form.excerpt"
-            toolbar="full"
-            v-model:content="form.excerpt"
-            contentType="html"
-            theme="snow"
-          /> -->
                 </div>
               </v-col>
               <v-col cols="12" md="12">
                 <div style="margin-top: 25px">
                   <label>Body</label>
-                  <!-- <QuillEditor
-            v-model="form.body"
-            toolbar="full"
-            v-model:content="form.body"
-            contentType="html"
-            theme="snow"
-          /> -->
+                  <TiptapEditor> </TiptapEditor>
                   <v-col cols="12 mt-5" md="12">
                     <label> Published </label>
                     <input
@@ -202,7 +150,7 @@
           </v-card>
         </v-col>
       </v-row>
-    </v-row>
+
   </v-row>
 </template>
 
