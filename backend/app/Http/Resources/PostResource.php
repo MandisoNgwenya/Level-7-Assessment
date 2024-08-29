@@ -15,7 +15,8 @@ class PostResource extends JsonResource
     public function toArray(Request $request): array
     {
   
-        dd($request->all(),$this);
+       
+    
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -23,8 +24,10 @@ class PostResource extends JsonResource
             'published' => $this->published,
             'excerpt' => $this->excerpt,
             'description' => $this->description,
-            'keywords' => $this->keywords,
             'user_id' => $this->user_id,
+            'tags'=> $this->tags,
+            'thumbnail_id' => $this->thumbnail_id,
+            'publish_date' => $this->publish_date,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
         ];

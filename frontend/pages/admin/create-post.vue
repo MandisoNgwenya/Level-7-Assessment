@@ -5,152 +5,67 @@
       <h1 v-else>Edit blog post</h1>
     </v-col>
 
- 
-      <v-row >
-        <v-col cols="12" md="6">
-          <v-card class="p-5 m-5">
-            <v-col cols="12" md="12">
-              <div >
-                <v-btn
-                  role="button"
-                  width="100%"
-                  @click.prevent="visitArticle(form.title, form.id)"
-                  >View Article
-                </v-btn>
-              </div>
-            </v-col>
-            <v-row>
-              <v-col cols="12" md="6">
-                <v-text-field
-                  :label="'Title'"
-                  v-model="form.title"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-text-field
-                  :label="'Author ( search by email) '"
-                  v-model="form.author"
-                  v-on:keyup="searchAuthor()"
-                ></v-text-field>
+    <v-row >
+      <v-col cols="12" md="6">
+        <v-card>
+          <v-col cols="12" md="12">
+            <v-text-field :label="'Title'" v-model="form.title"></v-text-field>
+          </v-col>
+          <v-col cols="12" md="12">
+            <v-text-field
+              type="date"
+              :label="'Publish date'"
+              v-model="form.publish_date"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" md="12">
+            <v-file-input
+              label="Thumbnail"
+              prepend-icon="mdi-camera"
+              variant="filled"
+              v-model="form.thumbnail"
+              multiple="true"
+            ></v-file-input>
+          </v-col>
+          <v-col cols="12" md="12">
+            <v-textarea
+              :label="'Description'"
+              v-model="form.description"
+            ></v-textarea>
+          </v-col>
+          <v-col cols="12" md="12">
+            <v-textarea
+              :label="'Tags Seperate by Comma (,)'"
+              v-model="form.tags"
+            ></v-textarea>
+          </v-col>
+          <v-col cols="12" md="12" id="excerpt">
+            <label>Excerpt (Max characters 150) </label>
+      
+            <TiptapEditor v-model="form.excerpt"> </TiptapEditor>
+          </v-col>
+          <v-col cols="12" md="12">
+            <label>Body</label>
+            <TiptapEditor v-model="form.body"> </TiptapEditor>
+          </v-col>
+          <v-col cols="12 mt-5" md="12">
+            <label> Published </label>
+            <input
+              type="checkbox"
+              class="ml-2 mb-2"
+              v-model="form.published"
+              :checked="form.published === 1"
+            />
+          </v-col>
 
-                <v-card v-if="resultsView" class="p-5">
-                  <a
-                    class="float-end"
-                    style="cursor: pointer"
-                    @click="resultsView = !resultsView"
-                    >X</a
-                  >
-                  Select Author
-
-                  <v-row>
-                    <a
-                      v-if="authorsData"
-                      v-for="(author, index) in authorsData.items"
-                      class="col-md-6 mb-2 mt-1"
-                      style="cursor: pointer"
-                      @click="assignAuthor(author)"
-                    >
-                      {{ author.first_name }} {{ author.last_name }} -
-                      {{ author.email }}
-
-                      <!-- <span> <i class="fa fa-check"></i></span> -->
-                    </a>
-                  </v-row>
-
-                  <a
-                    v-if="authorsData.more_items"
-                    class="mt-8 mb-5 float-end"
-                    style="cursor: pointer"
-                    @click="searchAuthor(true)"
-                    >Load more results >>></a
-                  >
-                </v-card>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-textarea
-                  :label="'Keywords'"
-                  v-model="form.keywords"
-                ></v-textarea>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-textarea
-                  :label="'Description'"
-                  v-model="form.description"
-                ></v-textarea>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-textarea
-                  :label="'Tags Seperate by Comma (,)'"
-                  v-model="form.tags"
-                ></v-textarea>
-              </v-col>
-              <v-col cols="12" md="12">
-             
-     <v-file-input
-    label="Thumbnail"
-    prepend-icon="mdi-camera"
-    variant="filled"
-  ></v-file-input>
-              </v-col>
-              <v-col cols="12" md="12">
-                <div class="row">
-                  <div
-                    v-if="images"
-                    class="col-md-3"
-                    v-for="(image, index) in images"
-                  >
-                    <v-card class="p-3 mt-5 v-card-custom-white image-div">
-                      <div class="row">
-                        <v-img
-                          :src="
-                            '/posts/images/' + image.filename + '.' + image.ext
-                          "
-                          width=""
-                          height="200"
-                          class="cat-image"
-                        ></v-img>
-
-                     
-                       
-                      </div>
-                    </v-card>
-                  </div>
-                </div>
-              </v-col>
-              <v-col cols="12" md="12" id="excerpt">
-                <div style="margin-top: 25px">
-                  <label>Excerpt (Max characters 150) </label>
-                  <TiptapEditor> </TiptapEditor>
-                </div>
-              </v-col>
-              <v-col cols="12" md="12">
-                <div style="margin-top: 25px">
-                  <label>Body</label>
-                  <TiptapEditor> </TiptapEditor>
-                  <v-col cols="12 mt-5" md="12">
-                    <label> Published </label>
-                    <input
-                      type="checkbox"
-                      class="ml-2 mb-2"
-                      v-model="form.published"
-                      :checked="form.published === 1"
-                    />
-                  </v-col>
-
-                  <v-col cols="12" md="12">
-                    <div class="mt-1 mb-5">
-                      <v-btn width="100%" @click="createArticle()">
-                        Publish</v-btn
-                      >
-                    </div>
-                  </v-col>
-                </div>
-              </v-col>
-            </v-row>
-          </v-card>
-        </v-col>
-      </v-row>
-
+          <v-col cols="12" md="12">
+            <div class="mt-1 mb-5">
+              <v-btn width="100%" @click="createPost()"> Publish</v-btn>
+            </div>
+          </v-col>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-row>
 </template>
 
@@ -170,23 +85,14 @@ export default {
   data: () => ({
     form: {
       id: 0,
-      author_id: 0,
-      author: {
-        first_name: "",
-        last_name: "",
-        email: "",
-      },
-      body: "",
+      publish_date: "",
+      body: '<p><span style="background-color: rgb(245, 245, 245); color: rgba(0, 0, 0, 0.87);">With many years of experience in providing clients with relevant, useful and reliable promotional items and advice, GiftWrap has become South Africa’s biggest and most innovative promotional gift wholesaler, importer and manufacturer. We sell branded gifts online, making it easier than ever before to stock up on those premium corporate personalized gifts that are guaranteed to get people talking. And that is exactly what you want promotional products to do. Promotional items have a long history in the marketing profession and they remain as popular as ever. GiftWrap stocks the biggest selection of promotional items and we offer an additional service of adding personalized branding (including logos and details embroidered on products).</span></p>',
       title: "",
-      domain_categories: [],
       published: false,
-      loadMore: false,
-      excerpt: "",
-      images: {
-        main_image: false,
-        thumbnail_image: false,
-        excerpt_image: false,
-      },
+      excerpt: '<p>Quis quaerat adipisi.</p>',
+      description:'',
+      thumbnail:'',
+      tags:''
     },
   }),
   watch: {
@@ -204,6 +110,15 @@ export default {
     });
   },
   methods: {
+    async createPost() {
+      this.response = await $fetch("http://127.0.0.1:8000/api/create-post", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: { form: this.form },
+      });
+    },
     assignAuthor(author) {
       this.form.author = author.first_name + author.last_name;
       this.form.author_id = author.id;

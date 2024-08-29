@@ -3,38 +3,35 @@
     <v-col cols="12" md="12">
       <h1>Welcome</h1>
     </v-col>
+
     <v-col
-      v-if="posts.success && posts.data.length"
+      v-if="posts.success && posts.data.items.length"
       cols="12"
       md="3"
-      v-for="(post, index) in posts.data"
+      v-for="(post, index) in posts.data.items"
       :key="index"
     >
       <v-card class="mx-auto">
         <div class="hover-wrapper">
           <v-img
-            height="250"
+            height="100%"
             eager
             position="center center"
-            :src="post.thumbnail"
+            :src="'http://127.0.0.1:8000/no-image.jpg'"
             :href="post.title"
           >
           </v-img>
         </div>
         <v-card-title>{{ post.title }}</v-card-title>
-        <v-card-text>{{ post.excerpt }}</v-card-text>
+        <v-card-text class="mt-2">
+          <div v-html="post.excerpt"> </div>
+          <NuxtLink :href="'/' + post.title + '?post_id=' + post.id" class="float-end"
+            >Read More</NuxtLink>
+        </v-card-text>
+
         <v-card-actions class="justify-space-between">
-          <v-btn-toggle dense>
-            <v-btn
-              text
-              :href="'/' + post.title + '?post_id=' + post.id"
-              class="btn btn-info"
-              color="red"
-              >Read now</v-btn
-            >
-            <v-btn text @click="share(post.id)">Share</v-btn>
-          </v-btn-toggle>
-          <div class="overline">{{ post.created_at }}</div>
+      
+          <div class="overline">{{ post.publish_date   }}</div>
         </v-card-actions>
         <v-divider class="mt-3"></v-divider>
         <v-card-text>
@@ -118,5 +115,4 @@ export default {
 
 
 <style>
-
 </style>
