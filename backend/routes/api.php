@@ -43,16 +43,17 @@ Route::controller(UserController::class)->group(function () {
 // Route::post('login', [AuthController::class, 'login'])->name('login');
 
 
-    // Route::resource('posts', PostController::class);
+// Route::resource('posts', PostController::class);
+Route::controller(PostController::class)->group(function () {
+    // Route::post('register', 'register');
+    Route::resource('posts', PostController::class);
+    // Route::get('posts','index');
+    Route::post('create-post', 'store');
+    Route::post('post/delete', 'destroy');
+});
 
 Route::middleware('auth:sanctum')->group(function () {
     // Route::resource('posts', PostController::class);
-    Route::controller(PostController::class)->group(function () {
-        // Route::post('register', 'register');
-        Route::resource('posts', PostController::class);
-        // Route::get('posts','index');
-        Route::post('create-post', 'store');
-        Route::post('post/delete', 'destroy');
-    });
+
 
 });

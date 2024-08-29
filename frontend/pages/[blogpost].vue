@@ -120,8 +120,8 @@ export default {
   }),
   watch: {},
   async mounted() {
-    let x= await dataStorage.getItem('data:_token') // Value persists
-    alert(x)
+    // let x= await dataStorage.getItem('data:_token') // Value persists
+    // alert(x)
   },
   async created() {
     const route = useRoute();

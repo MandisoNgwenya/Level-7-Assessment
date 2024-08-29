@@ -1,7 +1,15 @@
 <template>
   <v-row>
+    <!-- <Head>
+      <Title>{{ title }}</Title>
+      <Meta name="description" :content="title" />
+      <Style type="text/css" children="body { background-color: green; }" ></Style>
+    </Head> -->
+
     <v-col cols="12" md="12">
       <h1>Welcome</h1>
+
+      <!-- <v-btn @click="handleCookies()"> Tesadznm t</v-btn> -->
     </v-col>
 
     <v-col
@@ -54,27 +62,19 @@
 <script>
 definePageMeta({
   layout: "web-layout",
-  middleware: "auth",
+  // middleware: "auth",
 });
 
 export default {
   components: {},
   data: () => ({
     posts: "",
-    title: "test ",
   }),
   watch: {},
-  mounted() {},
+  mounted() {
+  
+  },
   async created() {
-    this.token = "";
-    // const dataStorage = useStorage('data')
-    // await dataSto  rage.setItem('_token', '2|P6UxxgpmIskswKErVfMaDF9jkR0HjqZ4V66OmSkv2ce16c47')
-
-    // localStorage.setItem("_token", "'2|P6UxxgpmIskswKErVfMaDF9jkR0HjqZ4V66OmSkv2ce16c47");
-    // Read counter cookie
-    // let counter = getCookie(event, 'counter');
-    // setCookie(event, 'counter', ++counter)
-
     this.posts = await $fetch("http://127.0.0.1:8000/api/posts", {
       method: "GET",
       headers: {
@@ -84,7 +84,21 @@ export default {
       },
     });
   },
-  methods: {},
+
+  methods: {
+    async handleCookies() {
+      alert("dsfjh");
+      let test = await $fetch("api/token", {
+        method: "POST",
+        body: {
+          cookie: "Test=Cookie update",
+        },
+      });
+
+       const token = useCookie('token');
+    console.log(token.value)
+    },
+  },
 };
 </script>
 
