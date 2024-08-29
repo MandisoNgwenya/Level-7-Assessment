@@ -38,7 +38,7 @@
         </v-navigation-drawer>
 
         <v-main>
-          <v-container>
+          <v-container width="60%">
             <slot />
           </v-container>
         </v-main>

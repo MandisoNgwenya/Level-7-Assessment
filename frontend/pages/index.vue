@@ -7,7 +7,7 @@
     <v-col
       v-if="posts.success && posts.data.items.length"
       cols="12"
-      md="3"
+      md="4"
       v-for="(post, index) in posts.data.items"
       :key="index"
     >
@@ -24,14 +24,16 @@
         </div>
         <v-card-title>{{ post.title }}</v-card-title>
         <v-card-text class="mt-2">
-          <div v-html="post.excerpt"> </div>
-          <NuxtLink :href="'/' + post.title + '?post_id=' + post.id" class="float-end"
-            >Read More</NuxtLink>
+          <div v-html="post.excerpt"></div>
+          <NuxtLink
+            :href="'/' + post.title + '?post_id=' + post.id"
+            class="float-end"
+            >Read More</NuxtLink
+          >
         </v-card-text>
 
         <v-card-actions class="justify-space-between">
-      
-          <div class="overline">{{ post.publish_date   }}</div>
+          <div class="overline">{{ post.publish_date }}</div>
         </v-card-actions>
         <v-divider class="mt-3"></v-divider>
         <v-card-text>
@@ -56,35 +58,9 @@ export default {
   components: {},
   data: () => ({
     posts: "",
-    drawer: false,
-    drawer1: false,
-    group: null,
-    users: "",
-    items: [
-      {
-        title: "Foo",
-        value: "foo",
-      },
-      {
-        title: "Bar",
-        value: "bar",
-      },
-      {
-        title: "Fizz",
-        value: "fizz",
-      },
-      {
-        title: "Buzz",
-        value: "buzz",
-      },
-    ],
   }),
-  watch: {
-    group() {
-      this.drawer = false;
-    },
-  },
-  async mounted() {},
+  watch: {},
+  mounted() {},
   async created() {
     this.posts = await $fetch("http://127.0.0.1:8000/api/posts", {
       method: "GET",
@@ -93,22 +69,7 @@ export default {
       },
     });
   },
-  methods: {
-    async getA() {
-      this.response = await $fetch("http://127.0.0.1:8000/api/posts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: {
-          email: "mandiso0sd42@yahoo.com",
-          password: "password",
-          name: "Mandiso Ngwenya",
-          c_password: "password",
-        },
-      });
-    },
-  },
+  methods: {},
 };
 </script>
 

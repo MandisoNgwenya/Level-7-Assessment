@@ -5,7 +5,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Tag extends Model
+class Comment extends Model
 {
 
     /**
@@ -15,6 +15,6 @@ class Tag extends Model
      */
 
     protected $fillable = [
-        'tag'
+        'comment','post_id','user_id'
     ];
 }

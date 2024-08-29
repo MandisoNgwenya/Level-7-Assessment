@@ -28,6 +28,7 @@ Route::controller(PostController::class)->group(function () {
 
 
 Route::controller(CommentController::class)->group(function () {
+    Route::resource('comments', CommentController::class);
     Route::post('create-comment', 'store');
 });
 
