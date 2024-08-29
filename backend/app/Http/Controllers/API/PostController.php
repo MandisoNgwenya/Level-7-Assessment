@@ -133,19 +133,25 @@ class PostController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post): JsonResponse
+    public function update(Request $request): JsonResponse
     {
         $input = $request->all();
 
         $validator = Validator::make($input, [
-            'name' => 'required',
-            'detail' => 'required'
+            'publish_date' => 'required',
+            'body' => 'required',
+            'title' => 'required',
+            'published' => 'required',
+            'excerpt' => 'required',
+            'description' => 'required',
+            'tags' => 'required',
         ]);
 
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
+        $post = Post::find($request['form']['id']);
         $post->name = $input['name'];
         $post->detail = $input['detail'];
         $post->save();
@@ -159,10 +165,19 @@ class PostController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post): JsonResponse
+    public function destroy(Request $request): JsonResponse
     {
-        $post->delete();
 
-        return $this->sendResponse([], 'Post deleted successfully.');
+        $post = Post::find($request['form']['id']);
+        $post->delete();
+        $itemsPerPage = 12;
+        if (isset($request['itemsPerPage'])) {
+            if (!is_null($itemsPerPage) || $itemsPerPage !== 0 || $itemsPerPage !== '') {
+                $itemsPerPage = $request['itemsPerPage'];
+            }
+        }
+        $posts = Post::paginate($itemsPerPage);
+        $posts = Pagination::data($posts);
+        return $this->sendResponse($posts, 'Posts deleted successfully.');
     }
 }
