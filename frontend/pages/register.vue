@@ -1,9 +1,14 @@
 <template>
   <v-row>
     <v-col cols="12" md="12">
-      <h1>Register</h1>
+      <h1>Register new account</h1>
     </v-col>
 
+    <v-row>
+      <v-col cols="12" md="12">
+        <UserForm :form="form"></UserForm>
+      </v-col>
+    </v-row>
   </v-row>
 </template>
 
@@ -15,36 +20,25 @@ definePageMeta({
 export default {
   components: {},
   data: () => ({
-    // post: "",
+    form: {
+      id: 0,
+      confirm_password: "",
+      password: "",
+      email: "",
+      name: "",
+    },
   }),
   watch: {},
   async mounted() {},
-  async created() {
-    // this.post = await $fetch("http://127.0.0.1:8000/api/posts/1", {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-    // if (this.post.success) {
-    //   if (this.post.data) {
-    //     this.post = this.post.data;
-    //   }
-    // }
-  },
+  async created() {},
   methods: {
-    async getA() {
-      this.response = await $fetch("http://127.0.0.1:8000/api/posts", {
+    async createPost() {
+      this.response = await $fetch("http://127.0.0.1:8000/api/create-user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: {
-          email: "mandiso0sd42@yahoo.com",
-          password: "password",
-          name: "Mandiso Ngwenya",
-          c_password: "password",
-        },
+        body: { form: this.form },
       });
     },
   },
@@ -54,5 +48,4 @@ export default {
 
 
 <style>
-
 </style>

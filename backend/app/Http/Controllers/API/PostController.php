@@ -9,6 +9,7 @@ use App\Models\Post;
 use App\Models\Tag;
 use Validator;
 use App\Http\Resources\PostResource;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use App\Services\Pagination;
 
@@ -37,6 +38,14 @@ class PostController extends BaseController
             }
         }
         $posts = Pagination::data($posts);
+
+        if(count($posts['items'])){
+            foreach($posts['items'] as $key => $post){
+                $posts['items'][$key]->user = User::find($post->user_id);
+             
+            }
+        }
+      
         return $this->sendResponse($posts, 'Posts retrieved successfully.');
     }
     /**

@@ -1,33 +1,12 @@
 <template>
   <v-row>
     <v-col cols="12" md="12">
-      <h1>Login</h1>
+      <h1 v-if="form.id === 0">Create new user</h1>
+      <h1 v-else>Edit user</h1>
     </v-col>
-
     <v-row>
       <v-col cols="12" md="12">
-        <v-card>
-          <v-col cols="12" md="12">
-            <v-text-field
-              :label="'Email'"
-              type="email"
-              v-model="form.email"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" md="12">
-            <v-text-field
-              :label="'Password'"
-              type="password"
-              v-model="form.password"
-            ></v-text-field>
-          </v-col>
-
-          <v-col cols="12" md="12">
-            <div class="mt-1 mb-5">
-              <v-btn width="100%" @click="createPost()"> Login </v-btn>
-            </div>
-          </v-col>
-        </v-card>
+        <UserForm :form="form"></UserForm>
       </v-col>
     </v-row>
   </v-row>
@@ -41,6 +20,7 @@ definePageMeta({
 export default {
   components: {},
   data: () => ({
+    
     form: {
       id: 0,
       confirm_password: "",

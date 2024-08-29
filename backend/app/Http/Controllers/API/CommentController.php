@@ -42,6 +42,7 @@ class CommentController extends BaseController
                 $comments = Comment::where('post_id', $request->post_id)->paginate($itemsPerPage);
             }
         }
+        // dd($request->all());
 
 
         $comments = Pagination::data($comments);

@@ -1,6 +1,5 @@
 <template>
   <div class="card-body">
-
     <div class="col-md-12 mb-3">
       <v-text-field
         :label="'Search'"
@@ -204,7 +203,9 @@ export default {
   props: ["data", "datatable"],
   setup() {},
   data: function () {
-    return {};
+    return {
+      payload: {},
+    };
   },
   components: {},
   computed: {},
@@ -212,19 +213,32 @@ export default {
   headers: {},
   mounted() {},
   methods: {
-    gotToMethod(url, type, link, item) {
-      console.log(url);
+    async gotToMethod(url, type, link, item) {
+      console.log(item);
       if (type === "GET" && link.api === false) {
         // internal route
         const router = useRouter();
         router.push({ path: url, params: { id: item.id } });
+      }
+
+      if (type === "POST" && link.api) {
+        this.payload = item;
+        url = "http://127.0.0.1:8000" + url;
+        let updatedData = await $fetch(url, {
+          method: type,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: { form: this.payload },
+        });
+        this.$emit("retrieveData", updatedData);
       }
       //   console.log(url, type, link, item);
     },
     async searchTable(parentRoute) {
       let url = "http://127.0.0.1:8000/api/" + parentRoute;
       if (this.keyword !== " ") {
-         url =
+        url =
           "http://127.0.0.1:8000/api/" +
           parentRoute +
           "?keyword=" +

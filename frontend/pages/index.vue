@@ -39,8 +39,9 @@
         <v-card-text>
           <div class="d-flex align-center">
             <v-col sm="12">
-              <p class="mb-0 subtitle-1">{{ post.user_id }}</p>
-              <p class="mb-0">{{ post.user_id }}</p>
+              <p v-if="post.user !== null" class="mb-0 subtitle-1">
+                by {{ post.user.name }}
+              </p>
             </v-col>
           </div>
         </v-card-text>
@@ -53,19 +54,33 @@
 <script>
 definePageMeta({
   layout: "web-layout",
+  middleware: "auth",
 });
+
 export default {
   components: {},
   data: () => ({
     posts: "",
+    title: "test ",
   }),
   watch: {},
   mounted() {},
   async created() {
+    this.token = "";
+    // const dataStorage = useStorage('data')
+    // await dataSto  rage.setItem('_token', '2|P6UxxgpmIskswKErVfMaDF9jkR0HjqZ4V66OmSkv2ce16c47')
+
+    // localStorage.setItem("_token", "'2|P6UxxgpmIskswKErVfMaDF9jkR0HjqZ4V66OmSkv2ce16c47");
+    // Read counter cookie
+    // let counter = getCookie(event, 'counter');
+    // setCookie(event, 'counter', ++counter)
+
     this.posts = await $fetch("http://127.0.0.1:8000/api/posts", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + this.token,
+        Accept: "application/json",
       },
     });
   },

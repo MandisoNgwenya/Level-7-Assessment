@@ -11,6 +11,8 @@
           :href="post.url"
         >
         </v-img>
+        
+    
       </v-col>
       <v-col cols="12" md="6">
         <v-row>
@@ -90,8 +92,10 @@
 
     <v-col cols="12" md="12">
       <v-textarea :label="'Comment'" v-model="form.comment"></v-textarea>
-      <div >
-        <v-btn  width="100%" class="m-5 mb-5" @click="sendComment(false)"> Send Comment </v-btn>
+      <div>
+        <v-btn width="100%" class="m-5 mb-5" @click="sendComment(false)">
+          Send Comment
+        </v-btn>
       </div>
     </v-col>
   </v-card>
@@ -115,10 +119,14 @@ export default {
     },
   }),
   watch: {},
-  async mounted() {},
+  async mounted() {
+    let x= await dataStorage.getItem('data:_token') // Value persists
+    alert(x)
+  },
   async created() {
-    // get by rouse id must change
-    this.post = await $fetch("http://127.0.0.1:8000/api/posts/1", {
+    const route = useRoute();
+    this.post_id = route.query.post_id;
+    this.post = await $fetch("http://127.0.0.1:8000/api/posts/"+this.post_id, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -130,7 +138,7 @@ export default {
       }
     }
     this.comments = await $fetch(
-      "http://127.0.0.1:8000/api/comments?post_id=1",
+      "http://127.0.0.1:8000/api/comments?post_id="+this.post_id,
       {
         method: "GET",
         headers: {
@@ -204,7 +212,7 @@ export default {
         this.payload.comment = comment.comment;
         this.payload.id = comment.comment;
         this.payload.id = comment.id;
-        url = "http://127.0.0.1:8000/api/update-comment"
+        url = "http://127.0.0.1:8000/api/update-comment";
       }
       this.comments = await $fetch(url, {
         method: "POST",

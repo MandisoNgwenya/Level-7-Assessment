@@ -17,7 +17,7 @@
             <v-btn icon="mdi-magnify" variant="text"></v-btn>
 
             <v-btn icon="mdi-account" variant="text"></v-btn>
-          </template> 
+          </template>
         </v-app-bar>
 
         <v-navigation-drawer
@@ -27,14 +27,12 @@
         >
           <v-btn
             v-for="(item, i) in items"
-            class="mt-2"
+            class="mt-3"
             width="100%"
-         @click="visitPage('/'+item.name)"
+            @click="visitPage('/' + item.name)"
           >
-            <!-- <i class="mdi-account"></i> -->
-         {{ item.text }}
+            {{ item.text }}
           </v-btn>
-          <!-- <v-list :items="items" @click="visitPage()"></v-list> -->
         </v-navigation-drawer>
 
         <v-main>
@@ -60,13 +58,33 @@ export default {
     group: null,
     users: "",
     items: [
-      { text: "Home", icon: "mdi-widgets", name: "" },
-      { text: "Register", icon: "mdi-widgets", name: "register" },
-      { text: "Login", icon: "mdi-widgets", name: "login" },
-      { text: "Posts", icon: "mdi-account-multiple", name: "admin/posts" },
-      { text: "Users", icon: "mdi-account-multiple", name: "admin/users" },
-      { text: "Forgot Password", icon: "mdi-widgets", name: "forgot-password" },
-       { text: "Comments", icon: "mdi-widgets", name: "admin/comments" },
+      { text: "Blog", icon: "mdi-widgets", name: "", admin: false },
+      {
+        text: "Posts",
+        icon: "mdi-account-multiple",
+        name: "admin/posts",
+        admin: true,
+      },
+      {
+        text: "Users",
+        icon: "mdi-account-multiple",
+        name: "admin/users",
+        admin: true,
+      },
+      {
+        text: "Comments",
+        icon: "mdi-widgets",
+        name: "admin/comments",
+        admin: true,
+      },
+      { text: "Register", icon: "mdi-widgets", name: "register", admin: false },
+      { text: "Login", icon: "mdi-widgets", name: "login", admin: false },
+      {
+        text: "Forgot Password",
+        icon: "mdi-widgets",
+        name: "forgot-password",
+        admin: false,
+      },
     ],
   }),
   watch: {
@@ -77,9 +95,8 @@ export default {
   async mounted() {},
   async created() {},
   methods: {
-
     visitPage(page) {
-           const router = useRouter();
+      const router = useRouter();
       router.push({ path: page });
     },
     async getA() {

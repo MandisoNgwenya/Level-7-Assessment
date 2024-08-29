@@ -92,13 +92,11 @@ export default {
     },
   }),
   watch: {
-    group() {
-      this.drawer = false;
-    },
+  
   },
   async mounted() {},
   async created() {
-    this.posts = await $fetch("http://127.0.0.1:8000/api/posts", {
+    this.post = await $fetch("http://127.0.0.1:8000/api/posts/1", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
