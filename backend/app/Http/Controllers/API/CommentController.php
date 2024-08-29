@@ -23,7 +23,7 @@ class CommentController extends BaseController
     public function index(Request $request): JsonResponse
     {
 
-        $itemsPerPage =2;
+        $itemsPerPage = 5;
         if (isset($request['itemsPerPage'])) {
             if (!is_null($itemsPerPage) || $itemsPerPage !== 0 || $itemsPerPage !== '') {
                 $itemsPerPage = $request['itemsPerPage'];
@@ -39,7 +39,7 @@ class CommentController extends BaseController
 
         if (isset($request->post_id)) {
             if ($request->post_id !== 0) {
-                $comments = Comment::where('post_id',$request->post_id)->paginate($itemsPerPage);
+                $comments = Comment::where('post_id', $request->post_id)->paginate($itemsPerPage);
             }
         }
 
@@ -72,9 +72,20 @@ class CommentController extends BaseController
 
         $comment = Comment::create($form);
         if (!is_null($comment)) {
-         
 
-            return $this->sendResponse(new CommentResource($comment), 'Comment created successfully.');
+            $itemsPerPage = 5;
+            if (isset($request['itemsPerPage'])) {
+                if (!is_null($itemsPerPage) || $itemsPerPage !== 0 || $itemsPerPage !== '') {
+                    $itemsPerPage = $request['itemsPerPage'];
+                }
+            }
+
+            $comments = Comment::where('post_id', $form['post_id'])->paginate($itemsPerPage);
+            $comments = Pagination::data($comments);
+            $comments['itemsPerPage'] = $itemsPerPage;
+
+
+            return $this->sendResponse($comments, 'Comment created successfully.');
         }
     }
 
@@ -106,20 +117,31 @@ class CommentController extends BaseController
     {
         $input = $request->all();
 
-        $validator = Validator::make($input, [
-            'name' => 'required',
-            'detail' => 'required'
+    
+        $validator = Validator::make($input['form'], [
+            'comment' => 'required',
+            'user_id' => 'required',
+            'post_id' => 'required',
+            'id' => 'required',
         ]);
-
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
-        $comment->name = $input['name'];
-        $comment->detail = $input['detail'];
+    
+        $comment = Comment::find($input['form']['id']);
+        $comment->comment = $input['form']['comment'];
         $comment->save();
-
-        return $this->sendResponse(new CommentResource($comment), 'Comment updated successfully.');
+        $itemsPerPage = 5;
+        if (isset($request['itemsPerPage'])) {
+            if (!is_null($itemsPerPage) || $itemsPerPage !== 0 || $itemsPerPage !== '') {
+                $itemsPerPage = $request['itemsPerPage'];
+            }
+        }
+        $comments = Comment::where('post_id', $request['form']['post_id'])->paginate($itemsPerPage);
+        $comments = Pagination::data($comments);
+        $comments['itemsPerPage'] = $itemsPerPage;
+        return $this->sendResponse($comments, 'Comments deleted successfully.');
     }
 
     /**
@@ -128,10 +150,22 @@ class CommentController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Comment $comment): JsonResponse
+    public function destroy(Comment $comment, Request $request): JsonResponse
     {
-        $comment->delete();
 
-        return $this->sendResponse([], 'Comment deleted successfully.');
+
+        $comment = Comment::find($request['form']['comment']['id']);
+        $comment->delete();
+        $itemsPerPage = 5;
+        if (isset($request['itemsPerPage'])) {
+            if (!is_null($itemsPerPage) || $itemsPerPage !== 0 || $itemsPerPage !== '') {
+                $itemsPerPage = $request['itemsPerPage'];
+            }
+        }
+
+        $comments = Comment::where('post_id', $request['form']['comment']['post_id'])->paginate($itemsPerPage);
+        $comments = Pagination::data($comments);
+        $comments['itemsPerPage'] = $itemsPerPage;
+        return $this->sendResponse($comments, 'Comments deleted successfully.');
     }
 }

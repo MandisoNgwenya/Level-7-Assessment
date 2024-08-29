@@ -63,10 +63,10 @@ export default {
       { text: "Home", icon: "mdi-widgets", name: "" },
       { text: "Register", icon: "mdi-widgets", name: "register" },
       { text: "Login", icon: "mdi-widgets", name: "login" },
-      { text: "Administrator", icon: "mdi-widgets", name: "admin" },
       { text: "Posts", icon: "mdi-account-multiple", name: "admin/posts" },
       { text: "Users", icon: "mdi-account-multiple", name: "admin/users" },
       { text: "Forgot Password", icon: "mdi-widgets", name: "forgot-password" },
+       { text: "Comments", icon: "mdi-widgets", name: "admin/comments" },
     ],
   }),
   watch: {

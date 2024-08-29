@@ -6,7 +6,7 @@
     </v-col>
 
     <v-row >
-      <v-col cols="12" md="6">
+      <v-col cols="12" md="12">
         <v-card>
           <v-col cols="12" md="12">
             <v-text-field :label="'Title'" v-model="form.title"></v-text-field>
@@ -71,10 +71,6 @@
 
 
 <script>
-// import Editor from '/components/Editor.vue';
-// import { QuillEditor } from '@vueup/vue-quill'
-// import '@vueup/vue-quill/dist/vue-quill.snow.css';
-
 definePageMeta({
   layout: "web-layout",
 });
@@ -117,57 +113,6 @@ export default {
           "Content-Type": "application/json",
         },
         body: { form: this.form },
-      });
-    },
-    assignAuthor(author) {
-      this.form.author = author.first_name + author.last_name;
-      this.form.author_id = author.id;
-      this.resultsView = false;
-    },
-    searchAuthor(loadMore = false) {
-      this.payload.searchTerm = this.form.author;
-      this.payload.action = "search-authors";
-      if (this.payload.searchTerm !== "") {
-        let url = "/search";
-        if (loadMore) {
-          url = url + "?page=" + (this.authorsData.current_page + 1);
-        }
-        axios
-          .post(url, this.payload)
-          .then((res) => {
-            this.resultsView = true;
-            this.authorsData = res.data;
-          })
-          .catch((err) => {});
-      } else {
-        this.resultsView = false;
-        this.authorsData = false;
-      }
-    },
-    savePost() {
-      this.payload.searchTerm = this.form.author;
-      this.payload.action = "search-authors";
-      this.payload.form;
-      axios
-        .post("action", this.payload)
-        .then((res) => {
-          this.resultsView = true;
-          this.authorsData = res.data;
-        })
-        .catch((err) => {});
-    },
-    async getA() {
-      this.response = await $fetch("http://127.0.0.1:8000/api/posts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: {
-          email: "mandiso0sd42@yahoo.com",
-          password: "password",
-          name: "Mandiso Ngwenya",
-          c_password: "password",
-        },
       });
     },
   },

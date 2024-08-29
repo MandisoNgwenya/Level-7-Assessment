@@ -30,6 +30,8 @@ Route::controller(PostController::class)->group(function () {
 Route::controller(CommentController::class)->group(function () {
     Route::resource('comments', CommentController::class);
     Route::post('create-comment', 'store');
+    Route::post('update-comment', 'update');
+    Route::post('comment/delete', 'destroy');
 });
 
 // Route::post('login', [AuthController::class, 'login'])->name('login');

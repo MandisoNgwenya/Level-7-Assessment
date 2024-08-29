@@ -1,8 +1,6 @@
 <template>
   <div class="card-body">
-    <h4 class="header-title mt-0 mb-3 text-right">
-      {{ datatable.title }}
-    </h4>
+
     <div class="col-md-12 mb-3">
       <v-text-field
         :label="'Search'"

@@ -89,10 +89,6 @@ export default {
         },
       ],
       parent: "",
-      searchData: {
-        column: "title",
-        model: "post",
-      },
       title: "Posts",
       headers: [
         {
@@ -145,44 +141,6 @@ export default {
     createArticle() {
       const router = useRouter();
       router.push({ path: "/admin/create-post" });
-    },
-
-    searchTable(loadMore = false) {
-      this.payload.searchTerm = this.keyword;
-      this.payload.action = "search-post";
-      if (this.payload.searchTerm !== "") {
-        let url = "/search";
-        if (loadMore) {
-          url = url + "?page=" + (this.authorsData.current_page + 1);
-        }
-      } else {
-      }
-    },
-    savePost() {
-      this.payload.searchTerm = this.form.author;
-      this.payload.action = "search-authors";
-      this.payload.form;
-      axios
-        .post("action", this.payload)
-        .then((res) => {
-          this.resultsView = true;
-          this.authorsData = res.data;
-        })
-        .catch((err) => {});
-    },
-    async getA() {
-      this.response = await $fetch("http://127.0.0.1:8000/api/posts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: {
-          email: "mandiso0sd42@yahoo.com",
-          password: "password",
-          name: "Mandiso Ngwenya",
-          c_password: "password",
-        },
-      });
     },
   },
 };
