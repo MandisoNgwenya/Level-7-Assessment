@@ -1,8 +1,8 @@
 <template>
   <v-row>
     <v-col cols="12" md="12">
-      <h1>Posts</h1>
-            {{ this._token }}
+      <h1 class="text-uppercase">Posts</h1>
+      
     </v-col>
     <v-row>
       <v-row>

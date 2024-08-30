@@ -22,7 +22,7 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 
-// Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::controller(PostController::class)->group(function () {
         // Route::post('register', 'register');
         // Route::get('posts','index');
@@ -48,4 +48,4 @@ Route::controller(RegisterController::class)->group(function () {
     Route::controller(UserController::class)->group(function () {
         Route::post('create-user', 'store');
     });
-// });
+});

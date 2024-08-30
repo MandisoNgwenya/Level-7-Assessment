@@ -1,9 +1,9 @@
 <template>
-      <Head v-if="post">
-      <Title>{{ post.title }}</Title>
-      <Meta name="description" :content="post.description" />
-      <Meta name="keywords" :content="post.keywords" />
-    </Head>
+  <Head v-if="post">
+    <Title>{{ post.title }}</Title>
+    <Meta name="description" :content="post.description" />
+    <Meta name="keywords" :content="post.keywords" />
+  </Head>
   <v-card class="mt-8">
     <v-row>
       <v-col cols="12" md="6">
@@ -41,21 +41,23 @@
 
   <v-card class="mt-8">
     <v-col cols="12" md="12">
-    
-      <v-card-title>  <v-chip   class="ma-2" label> {{'Tags'}} </v-chip></v-card-title>
+      <v-card-title>
+        <v-chip class="ma-2" label> {{ "Tags" }} </v-chip></v-card-title
+      >
 
-
-    
-        <v-chip v-if=" post.tags" v-for="(tag,index) in  post.tags" class="ma-2" color="pink" label>
-          <v-icon  icon="mdi-label" start></v-icon>
-          {{tag.tag}}
-        </v-chip>
-
-   
+      <v-chip
+        v-if="post.tags"
+        v-for="(tag, index) in post.tags"
+        class="ma-2"
+        color="pink"
+        label
+      >
+        <v-icon icon="mdi-label" start></v-icon>
+        {{ tag.tag }}
+      </v-chip>
     </v-col>
 
     <v-card class="mx-auto">
-
       <v-list lines="two">
         <v-list-subheader>Comments</v-list-subheader>
 
@@ -65,14 +67,16 @@
           prepend-avatar="https://cdn.vuetifyjs.com/images/lists/1.jpg"
         >
           <template v-slot:subtitle>
-            <span class="font-weight-bold"></span>   {{comment.user.name}} 
+            <span class="font-weight-bold"></span> {{ comment.user.name }}
           </template>
 
-          <v-textarea rows="2" v-model="comment.comment" class="mt-2"></v-textarea>
+          <v-textarea
+            rows="2"
+            v-model="comment.comment"
+            class="mt-2"
+          ></v-textarea>
           <v-divider></v-divider>
           <div class="mt-2">
-    
-         
             <v-btn
               icon="mdi-send"
               variant="text"
@@ -91,7 +95,7 @@
         <v-divider inset></v-divider>
       </v-list>
     </v-card>
-  
+
     <v-col cols="12" md="12">
       <div>
         <v-btn
@@ -130,7 +134,6 @@ export default {
     form: {
       comment: "",
       post_id: 0,
-      user_id: 0,
     },
   }),
   watch: {},
@@ -195,7 +198,8 @@ export default {
             page +
             "&itemsPerPage=" +
             itemsPerPage +
-            "&post_id=1";
+            "&post_id=" +
+            this.post_id;
 
           this.comments = await $fetch(url, {
             method: "GET",
@@ -240,19 +244,19 @@ export default {
       const token = useCookie("token");
       if (token) {
         this.payload.post_id = this.post.id;
-        this.payload.user_id = 1;
         this.payload.id = 0;
         let url = "http://127.0.0.1:8000/api/create-comment";
-        if (comment === false) {
 
+        let proceed = false;
+        if (comment === false) {
           this.payload.comment = this.form.comment;
-          
         } else {
           this.payload.comment = comment.comment;
           this.payload.id = comment.comment;
           this.payload.id = comment.id;
           url = "http://127.0.0.1:8000/api/update-comment";
         }
+
         this.comments = await $fetch(url, {
           method: "POST",
           headers: {
@@ -262,7 +266,6 @@ export default {
           },
           body: { form: this.payload },
         });
-
         if (this.comments.success) {
           if (this.comments.data) {
             this.comments = this.comments.data;

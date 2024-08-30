@@ -9,7 +9,6 @@
     </div>
 
     <div
-      data-v-8d6f2985=""
       class="v-table v-table--has-top v-table--has-bottom v-theme--light v-table--density-default v-data-table elevation-1"
     >
       <div v-if="data.items" class="v-table__wrapper">
@@ -17,29 +16,34 @@
           <thead>
             <tr>
               <th
-                class="v-data-table__td v-data-table-column--align-start v-data-table__th v-data-table__th--sortable"
+                class=" "
                 v-if="datatable.headers"
                 v-for="(header, index) in datatable.headers"
               >
-                <div class="v-data-table-header__content">
+                <div>
                   <span>{{ header.title }}</span>
-                  <i
-                    class="mdi-arrow-up mdi v-icon notranslate v-theme--light v-icon--size-default v-data-table-header__sort-icon"
-                    aria-hidden="true"
-                  ></i>
                 </div>
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, index) in data.items" class="v-data-table__tr">
+            <tr v-for="(item, index) in data.items">
               <td
                 v-if="datatable.headers"
                 v-for="(header, indexH) in datatable.headers"
-                class="v-data-table__td v-data-table-column--align-start"
               >
                 <div v-if="header.key !== 'actions'">
-                  {{ item[header.key] }}
+                  
+                  <NuxtLink
+                    class="pl-2"
+                    type="button"
+                    v-if="header.key === 'post_id'"
+                    :href="'/admin/view-post?' + 'id=' + item.post_id"
+                  >
+                    View Post
+                  </NuxtLink>
+
+                  <span v-else> {{ item[header.key] }} </span>
                 </div>
                 <div v-else>
                   <span v-for="(link, index) in datatable.links">
@@ -63,7 +67,7 @@
                       {{ link.name }}
                     </NuxtLink>
 
-                    <v-btn
+                    <!-- <v-btn
                       v-if="link.method === false && link.params === true"
                       @click.prevent="
                         gotToMethod(
@@ -81,7 +85,7 @@
                       :icon="link.icon"
                       variant="text"
                       @click="gotToMethod(link.link, link.type, link, item)"
-                    ></v-btn>
+                    ></v-btn> -->
                   </span>
                 </div>
               </td>
@@ -89,13 +93,11 @@
           </tbody>
         </table>
       </div>
-      <div v-else class="p-5">No results found</div>
+      <div v-else class="p-5 m-5 text-center"><h1>No results found</h1></div>
     </div>
 
- 
-
     <v-card v-if="data.items" class="mt-4">
-      <div class="p-2 ">
+      <div class="p-2">
         <v-row>
           <v-col cols="12" md="12">
             <ul class="pagination">
@@ -216,20 +218,27 @@ export default {
   mounted() {},
   methods: {
     async gotToMethod(url, type, link, item) {
-      console.log(item);
-      if (type === "GET" && link.api === false) {
-        // internal route
-        const router = useRouter();
-        router.push({ path: url, params: { id: item.id } });
-      }
+      // if (type === "GET" && link.api === false) {
+      //   // internal route
+      //   const router = useRouter();
+      //   router.push({ path: url });
+
+      //   // investiagte how to make dynamic
+      //   // if (link.paramKey === "id") {
+      //   //   router.push({ path: url, params: { id: item.id } });
+      //   // }
+      // }
 
       if (type === "POST" && link.api) {
         this.payload = item;
+        const token = useCookie("token");
         url = "http://127.0.0.1:8000" + url;
         let updatedData = await $fetch(url, {
           method: type,
           headers: {
             "Content-Type": "application/json",
+            Authorization: "Bearer " + token.value,
+            Accept: "application/json",
           },
           body: { form: this.payload },
         });
@@ -239,6 +248,7 @@ export default {
     },
     async searchTable(parentRoute) {
       let url = "http://127.0.0.1:8000/api/" + parentRoute;
+      const token = useCookie("token");
       if (this.keyword !== " ") {
         url =
           "http://127.0.0.1:8000/api/" +
@@ -250,16 +260,20 @@ export default {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + token.value,
+          Accept: "application/json",
         },
       });
       this.$emit("retrieveData", updatedData);
     },
     async getData(item) {
-      console.log(item);
+      const token = useCookie("token");
       let updatedData = await $fetch(item, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + token.value,
+          Accept: "application/json",
         },
       });
       this.$emit("retrieveData", updatedData);

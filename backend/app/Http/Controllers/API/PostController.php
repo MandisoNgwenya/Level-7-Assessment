@@ -47,7 +47,7 @@ class PostController extends BaseController
             }
         }
       
-        // dd($posts);
+      
         return $this->sendResponse($posts, 'Posts retrieved successfully.');
     }
     /**
@@ -67,18 +67,34 @@ class PostController extends BaseController
             'published' => 'required',
             'excerpt' => 'required',
             'description' => 'required',
-            'tags' => 'required',
+            'keywords' => 'required',
 
         ]);
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
         }
+        $user =  auth('sanctum')->user();
         $form = $input['form'];
-        $form['user_id'] = 1;
+        $form['user_id'] = $user->id;;
         $form['thumbnail_id'] = 1;
-        $post = Post::create($form);
+        if($form['id']==0){
+            $post = Post::create($form);
+        }else{
+            $post = Post::find($form['id']);
+            $post->publish_date = $form['publish_date'];
+            $post->body = $form['body'];
+            $post->title = $form['title'];
+            $post->published = $form['published'];
+            $post->excerpt = $form['excerpt'];
+            $post->description = $form['description'];
+            $post->description = $form['description'];
+            $post->save();
+     
+        }
+  
+
         if (!is_null($post)) {
-            $tags = $form['tags'];
+            $tags = $form['keywords'];
             $tags = explode(',', $tags);
             if (count($tags)) {
                 foreach ($tags as $key => $tag) {
@@ -145,38 +161,7 @@ class PostController extends BaseController
         return $this->sendResponse(new PostResource($post), 'Post retrieved successfully.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request): JsonResponse
-    {
-        $input = $request->all();
 
-        $validator = Validator::make($input, [
-            'publish_date' => 'required',
-            'body' => 'required',
-            'title' => 'required',
-            'published' => 'required',
-            'excerpt' => 'required',
-            'description' => 'required',
-            'tags' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors());
-        }
-
-        $post = Post::find($request['form']['id']);
-        $post->name = $input['name'];
-        $post->detail = $input['detail'];
-        $post->save();
-
-        return $this->sendResponse(new PostResource($post), 'Post updated successfully.');
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -197,6 +182,14 @@ class PostController extends BaseController
         }
         $posts = Post::paginate($itemsPerPage);
         $posts = Pagination::data($posts);
+        if (count($posts['items'])) {
+            foreach ($posts['items'] as $key => $post) {
+                $posts['items'][$key]->user = User::find($post->user_id);
+                $posts['items'][$key]->publish_date = date('Y-m-d', strtotime($post->publish_date));
+            }
+        }
+      
+        
         return $this->sendResponse($posts, 'Posts deleted successfully.');
     }
 }

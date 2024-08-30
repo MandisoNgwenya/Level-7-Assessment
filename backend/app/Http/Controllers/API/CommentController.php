@@ -42,14 +42,12 @@ class CommentController extends BaseController
                 $comments = Comment::where('post_id', $request->post_id)->paginate($itemsPerPage);
             }
         }
-        // dd($request->all());
-
 
         $comments = Pagination::data($comments);
         $comments['itemsPerPage'] = $itemsPerPage;
-        if(count($comments['items'])){
-            foreach($comments['items'] as $key => $comment){
-        
+        if (count($comments['items'])) {
+            foreach ($comments['items'] as $key => $comment) {
+
                 $comments['items'][$key]->user;
             }
         }
@@ -62,13 +60,12 @@ class CommentController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
 
         $input = $request->all();
         $validator = Validator::make($input['form'], [
             'comment' => 'required',
-            'user_id' => 'required',
             'post_id' => 'required',
 
         ]);
@@ -77,6 +74,8 @@ class CommentController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());
         }
         $form = $input['form'];
+        $user =  auth('sanctum')->user();
+        $form['user_id'] =  $user->id;
 
         $comment = Comment::create($form);
         if (!is_null($comment)) {
@@ -127,14 +126,13 @@ class CommentController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Comment $comment): JsonResponse
+    public function update(Request $request): JsonResponse
     {
         $input = $request->all();
 
-    
+
         $validator = Validator::make($input['form'], [
             'comment' => 'required',
-            'user_id' => 'required',
             'post_id' => 'required',
             'id' => 'required',
         ]);
@@ -142,10 +140,15 @@ class CommentController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
-    
+
         $comment = Comment::find($input['form']['id']);
-        $comment->comment = $input['form']['comment'];
-        $comment->save();
+        $user =  auth('sanctum')->user();
+        if ($comment->user_id == $user->id) {
+            $comment->comment = $input['form']['comment'];
+            $comment->user_id = $user->id;
+            $comment->save();
+        }
+
         $itemsPerPage = 5;
         if (isset($request['itemsPerPage'])) {
             if (!is_null($itemsPerPage) || $itemsPerPage !== 0 || $itemsPerPage !== '') {
@@ -157,11 +160,10 @@ class CommentController extends BaseController
         $comments['itemsPerPage'] = $itemsPerPage;
         if (count($comments['items'])) {
             foreach ($comments['items'] as $key => $comment) {
-
                 $comments['items'][$key]->user;
             }
         }
-        return $this->sendResponse($comments, 'Comments deleted successfully.');
+        return $this->sendResponse($comments, 'Comments updated successfully.');
     }
 
     /**
@@ -170,12 +172,18 @@ class CommentController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Comment $comment, Request $request): JsonResponse
+    public function destroy(Request $request): JsonResponse
     {
 
+        // dd($request['form']);
+        $user =  auth('sanctum')->user();
+        $comment = Comment::find($request['form']['id']);
 
-        $comment = Comment::find($request['form']['comment']['id']);
-        $comment->delete();
+    
+        if ($comment->user_id == $user->id) {
+
+            $comment->delete();
+        }
         $itemsPerPage = 5;
         if (isset($request['itemsPerPage'])) {
             if (!is_null($itemsPerPage) || $itemsPerPage !== 0 || $itemsPerPage !== '') {
@@ -183,7 +191,7 @@ class CommentController extends BaseController
             }
         }
 
-        $comments = Comment::where('post_id', $request['form']['comment']['post_id'])->paginate($itemsPerPage);
+        $comments = Comment::where('post_id', $request['form']['post_id'])->paginate($itemsPerPage);
         $comments = Pagination::data($comments);
         $comments['itemsPerPage'] = $itemsPerPage;
         if (count($comments['items'])) {

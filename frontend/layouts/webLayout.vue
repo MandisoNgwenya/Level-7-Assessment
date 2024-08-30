@@ -91,12 +91,7 @@ export default {
       },
       { text: "Register", icon: "mdi-widgets", name: "register", admin: false },
       { text: "Login", icon: "mdi-widgets", name: "login", admin: false },
-      {
-        text: "Forgot Password",
-        icon: "mdi-widgets",
-        name: "forgot-password",
-        admin: false,
-      },
+
     ],
   }),
   watch: {

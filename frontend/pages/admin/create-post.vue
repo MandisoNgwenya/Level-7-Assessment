@@ -1,10 +1,9 @@
 <template>
   <v-row>
     <v-col cols="12" md="12">
-      <h1 v-if="form.id === 0">Create new blog post</h1>
-      <h1 v-else>Edit blog post</h1>
+      <h1 v-if="form.id === 0" class="text-uppercase">Create new blog post</h1>
+      <h1 v-else class="text-uppercase">Edit blog post</h1>
     </v-col>
-
 
     <v-row>
       <v-col cols="12" md="12">
@@ -37,17 +36,20 @@
           <v-col cols="12" md="12">
             <v-textarea
               :label="'Tags Seperate by Comma (,)'"
-              v-model="form.tags"
+              v-model="form.keywords"
             ></v-textarea>
           </v-col>
           <v-col cols="12" md="12" id="excerpt">
             <label>Excerpt (Max characters 150) </label>
 
-            <TiptapEditor v-model="form.excerpt"> </TiptapEditor>
+            <editor v-model="form.excerpt" />
+
+            <!-- <TiptapEditor v-model="content"> </TiptapEditor> -->
           </v-col>
           <v-col cols="12" md="12">
             <label>Body</label>
-            <TiptapEditor v-model="form.body"> </TiptapEditor>
+            <editor v-model="form.body" />
+            <!-- <TiptapEditor v-model="form.body"> </TiptapEditor> -->
           </v-col>
           <v-col cols="12 mt-5" md="12">
             <label> Published </label>
@@ -74,12 +76,15 @@
 <script>
 definePageMeta({
   layout: "web-layout",
+  middleware: "auth",
 });
+
 export default {
-  components: {
-    // QuillEditor
-  },
+  components: {},
   data: () => ({
+    content:
+      "<p>A Vue.js wrapper component for Tiptap to use <code>v-model</code>.</p>",
+
     form: {
       id: 0,
       publish_date: "",
@@ -97,34 +102,44 @@ export default {
   async created() {
     const route = useRoute();
     this.post_id = route.query.id;
-    this.post = await $fetch(
-      "http://127.0.0.1:8000/api/posts/" + this.post_id,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const token = useCookie("token");
+    if (token) {
+      this.post = await $fetch(
+        "http://127.0.0.1:8000/api/posts/" + this.post_id,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token.value,
+            Accept: "application/json",
+          },
+        }
+      );
 
-    if(this.post.success){
-      if(this.post.data){
-  this.form = this.post.data
-        console.log(this.form,this.post.data);return
-      
+      if (this.post.success) {
+        if (this.post.data) {
+          this.form = this.post.data;
+        }
       }
-
     }
   },
   methods: {
     async createPost() {
+      const token = useCookie("token");
       this.response = await $fetch("http://127.0.0.1:8000/api/create-post", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + token.value,
+          Accept: "application/json",
         },
         body: { form: this.form },
       });
+      if (this.response.success) {
+        const router = useRouter();
+        router.push({ path: "/admin/posts" });
+        // router.push({ path: "/"+this.response.data.title +'?post_id='+this.response.data.id });
+      }
     },
   },
 };

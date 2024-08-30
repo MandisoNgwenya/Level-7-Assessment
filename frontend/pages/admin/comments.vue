@@ -1,8 +1,8 @@
 <template>
   <v-row>
     <v-col cols="12" md="12">
-      <h1>Comments</h1>
-      {{this._token}}
+      <h1 class="text-uppercase">Comments</h1>
+
     </v-col>
     <v-row>
       <v-row>
@@ -38,16 +38,7 @@ export default {
     datatable: {
       parentRoute: "comments",
       links: [
-        {
-          link: "",
-          type: "GET",
-          method: false,
-          api: false,
-          params: true,
-          paramKey: "id",
-          name: "View Post",
-          icon: "mdi-eye",
-        },
+ 
 
         {
           link: "/api/comment/delete",
