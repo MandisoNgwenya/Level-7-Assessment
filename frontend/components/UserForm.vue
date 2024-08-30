@@ -211,7 +211,7 @@ export default {
         body: { form: this.form },
       });
 
-      console.log(this.response);
+  
       if (this.response.success) {
         let _user = await $fetch("api/user", {
           method: "POST",
@@ -220,7 +220,6 @@ export default {
           },
         });
 
-        alert(this.response.data.name)
         let _token = await $fetch("api/token", {
           method: "POST",
           body: {
@@ -229,7 +228,7 @@ export default {
         });
 
         router.push({ path: "admin/posts" });
-        // const token = useCookie("token");
+   
       }
     },
   },
