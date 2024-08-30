@@ -2,6 +2,7 @@
   <v-row>
     <v-col cols="12" md="12">
       <h1>Comments</h1>
+      {{this._token}}
     </v-col>
     <v-row>
       <v-row>
@@ -26,6 +27,7 @@
 <script>
 definePageMeta({
   layout: "web-layout",
+  middleware: "auth",
 });
 export default {
   components: {},
@@ -92,14 +94,27 @@ export default {
   watch: {},
   async mounted() {},
   async created() {
-    this.data = await $fetch("http://127.0.0.1:8000/api/comments", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (this.data.success) {
-      this.data = this.data.data;
+    const token = useCookie("token");
+
+    let url = "http://127.0.0.1:8000/api/comments";   
+     const route = useRoute();
+    this.post_id = route.query.post_id;
+  
+    if(this.post_id){
+      url = url+'?post_id='+this.post_id;
+    }
+    if (token) {
+      this.data = await $fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token.value,
+          Accept: "application/json",
+        },
+      });
+      if (this.data.success) {
+        this.data = this.data.data;
+      }
     }
   },
   methods: {

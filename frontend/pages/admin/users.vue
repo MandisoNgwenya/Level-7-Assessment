@@ -9,10 +9,7 @@
           <v-card class="p-5">
             <v-col cols="12" md="12">
               <div class="mb-5">
-                <v-btn
-                  role="button"
-                  width="100%"
-                  @click.prevent="createUser()"
+                <v-btn role="button" width="100%" @click.prevent="createUser()"
                   >Create Users
                 </v-btn>
               </div>
@@ -36,28 +33,19 @@
 <script>
 definePageMeta({
   layout: "web-layout",
+  middleware: "auth",
 });
 export default {
   components: {},
   data: () => ({
     data: [],
     payload: {},
-
+    _token: false,
     datatable: {
-      parentRoute: "posts",
+      parentRoute: "users",
       links: [
         {
-          link: "/admin/comments",
-          type: "GET",
-          method: false,
-          api: false,
-          params: true,
-          paramKey: "id",
-          name: "Comments",
-          icon: "mdi-comment",
-        },
-        {
-          link: "/admin/create-post",
+          link: "/admin/create-user",
           type: "GET",
           method: false,
           api: false,
@@ -68,7 +56,7 @@ export default {
         },
 
         {
-          link: "/admin/view-post",
+          link: "/admin/view-user",
           type: "GET",
           method: false,
           api: false,
@@ -78,7 +66,7 @@ export default {
           icon: "mdi-eye",
         },
         {
-          link: "/api/post/delete",
+          link: "/api/user/delete",
           type: "POST",
           method: true,
           api: true,
@@ -92,23 +80,25 @@ export default {
       title: "Users",
       headers: [
         {
-          title: "Title",
+          title: "Name",
           align: "start",
           sortable: true,
-          key: "title",
+          key: "name",
         },
+        {
+          title: "Email",
+          align: "start",
+          sortable: true,
+          key: "email",
+        },
+
         {
           title: "Created",
           align: "start",
           sortable: true,
           key: "created_at",
         },
-        {
-          title: "Published",
-          align: "start",
-          sortable: true,
-          key: "published",
-        },
+
         {
           title: "Actions",
           key: "actions",
@@ -122,14 +112,20 @@ export default {
   watch: {},
   async mounted() {},
   async created() {
-    this.data = await $fetch("http://127.0.0.1:8000/api/users", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (this.data.success) {
-      this.data = this.data.data;
+    const token = useCookie("token");
+
+    if (token) {
+      this.data = await $fetch("http://127.0.0.1:8000/api/users", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token.value,
+          Accept: "application/json",
+        },
+      });
+      if (this.data.success) {
+        this.data = this.data.data;
+      }
     }
   },
   methods: {
@@ -142,9 +138,6 @@ export default {
       const router = useRouter();
       router.push({ path: "/admin/create-user" });
     },
-
-
-
   },
 };
 </script>

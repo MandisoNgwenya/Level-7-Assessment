@@ -25,14 +25,25 @@
           :location="$vuetify.display.mobile ? 'bottom' : undefined"
           temporary
         >
-          <v-btn
-            v-for="(item, i) in items"
-            class="mt-3"
-            width="100%"
-            @click="visitPage('/' + item.name)"
-          >
-            {{ item.text }}
-          </v-btn>
+          <div v-for="(item, i) in items">
+            <v-btn
+              v-if="_token && item.admin"
+              class="mt-3"
+              width="100%"
+              @click="visitPage('/' + item.name)"
+            >
+              <span> {{ item.text }} </span>
+            </v-btn>
+
+            <v-btn
+              v-if="item.admin == false"
+              class="mt-3"
+              width="100%"
+              @click="visitPage('/' + item.name)"
+            >
+              <span> {{ item.text }} </span>
+            </v-btn>
+          </div>
         </v-navigation-drawer>
 
         <v-main>
@@ -54,6 +65,7 @@ export default {
   components: {},
   data: () => ({
     response: false,
+    _token: false,
     drawer: false,
     group: null,
     users: "",
@@ -93,27 +105,14 @@ export default {
     },
   },
   async mounted() {},
-  async created() {},
+  async created() {
+    const token = useCookie("token");
+    this._token = token;
+  },
   methods: {
     visitPage(page) {
       const router = useRouter();
       router.push({ path: page });
-    },
-    async getA() {
-      this.response = await $fetch("http://127.0.0.1:8000/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: {
-          email: "mandiso0sd42@yahoo.com",
-          password: "password",
-          name: "Mandiso Ngwenya",
-          c_password: "password",
-        },
-      });
-
-      return this.response;
     },
   },
 };

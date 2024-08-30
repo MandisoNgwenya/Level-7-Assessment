@@ -47,6 +47,13 @@ class CommentController extends BaseController
 
         $comments = Pagination::data($comments);
         $comments['itemsPerPage'] = $itemsPerPage;
+        if(count($comments['items'])){
+            foreach($comments['items'] as $key => $comment){
+        
+                $comments['items'][$key]->user;
+            }
+        }
+        // dd($comments);
         return $this->sendResponse($comments, 'Comments retrieved successfully.');
     }
     /**
@@ -84,6 +91,12 @@ class CommentController extends BaseController
             $comments = Comment::where('post_id', $form['post_id'])->paginate($itemsPerPage);
             $comments = Pagination::data($comments);
             $comments['itemsPerPage'] = $itemsPerPage;
+            if (count($comments['items'])) {
+                foreach ($comments['items'] as $key => $comment) {
+
+                    $comments['items'][$key]->user;
+                }
+            }
 
 
             return $this->sendResponse($comments, 'Comment created successfully.');
@@ -142,6 +155,12 @@ class CommentController extends BaseController
         $comments = Comment::where('post_id', $request['form']['post_id'])->paginate($itemsPerPage);
         $comments = Pagination::data($comments);
         $comments['itemsPerPage'] = $itemsPerPage;
+        if (count($comments['items'])) {
+            foreach ($comments['items'] as $key => $comment) {
+
+                $comments['items'][$key]->user;
+            }
+        }
         return $this->sendResponse($comments, 'Comments deleted successfully.');
     }
 
@@ -167,6 +186,12 @@ class CommentController extends BaseController
         $comments = Comment::where('post_id', $request['form']['comment']['post_id'])->paginate($itemsPerPage);
         $comments = Pagination::data($comments);
         $comments['itemsPerPage'] = $itemsPerPage;
+        if (count($comments['items'])) {
+            foreach ($comments['items'] as $key => $comment) {
+
+                $comments['items'][$key]->user;
+            }
+        }
         return $this->sendResponse($comments, 'Comments deleted successfully.');
     }
 }

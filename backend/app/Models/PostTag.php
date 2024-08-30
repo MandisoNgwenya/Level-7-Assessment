@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class PostTag extends Model
 {
@@ -21,8 +21,8 @@ class PostTag extends Model
         'tag_id'
     ];
 
-    public function posts(): BelongsToMany
+    public function tag(): HasOne
     {
-        return $this->belongsToMany(Post::class);
+        return $this->hasOne(Tag::class,'id', 'tag_id');
     }
 }

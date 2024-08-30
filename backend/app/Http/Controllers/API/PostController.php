@@ -42,10 +42,12 @@ class PostController extends BaseController
         if(count($posts['items'])){
             foreach($posts['items'] as $key => $post){
                 $posts['items'][$key]->user = User::find($post->user_id);
+                $posts['items'][$key]->publish_date = date('Y-m-d', strtotime($post->publish_date));
              
             }
         }
       
+        // dd($posts);
         return $this->sendResponse($posts, 'Posts retrieved successfully.');
     }
     /**
@@ -58,9 +60,6 @@ class PostController extends BaseController
     {
 
         $input = $request->all();
-
-
-
         $validator = Validator::make($input['form'], [
             'publish_date' => 'required',
             'body' => 'required',
@@ -71,7 +70,6 @@ class PostController extends BaseController
             'tags' => 'required',
 
         ]);
-
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
         }
@@ -132,6 +130,18 @@ class PostController extends BaseController
             return $this->sendError('Post not found.');
         }
 
+        $keywords ='';
+        $tags =[];
+        if(count($post->tags)){
+            foreach($post->tags as $key => $tag){
+                if(!is_null($tag->tag)){
+                    $keywords .= $tag->tag->tag.',';
+                }
+                $tags[] = $tag->tag;
+            }
+        }
+        $post->keywords= $keywords;
+        $post->tags = $tags;
         return $this->sendResponse(new PostResource($post), 'Post retrieved successfully.');
     }
 

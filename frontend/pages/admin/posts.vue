@@ -2,6 +2,7 @@
   <v-row>
     <v-col cols="12" md="12">
       <h1>Posts</h1>
+            {{ this._token }}
     </v-col>
     <v-row>
       <v-row>
@@ -36,6 +37,7 @@
 <script>
 definePageMeta({
   layout: "web-layout",
+  middleware: "auth",
 });
 export default {
   components: {},
@@ -45,6 +47,7 @@ export default {
 
     datatable: {
       parentRoute: "posts",
+      _token: false,
       links: [
         {
           link: "/admin/comments",
@@ -52,7 +55,7 @@ export default {
           method: false,
           api: false,
           params: true,
-          paramKey: "id",
+          paramKey: "post_id",
           name: "Comments",
           icon: "mdi-comment",
         },
@@ -120,16 +123,22 @@ export default {
     },
   }),
   watch: {},
-  async mounted() {},
+  async mounted() {
+  },
   async created() {
-    this.data = await $fetch("http://127.0.0.1:8000/api/posts", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (this.data.success) {
-      this.data = this.data.data;
+    const token = useCookie("token");
+    if (token) {
+      this.data = await $fetch("http://127.0.0.1:8000/api/posts", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " +token.value,
+          Accept: "application/json",
+        },
+      });
+      if (this.data.success) {
+        this.data = this.data.data;
+      }
     }
   },
   methods: {

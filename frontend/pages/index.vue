@@ -1,15 +1,12 @@
 <template>
   <v-row>
-    <!-- <Head>
-      <Title>{{ title }}</Title>
-      <Meta name="description" :content="title" />
-      <Style type="text/css" children="body { background-color: green; }" ></Style>
-    </Head> -->
+    <Head>
+      <Title>{{ 'Welcome - Level 7 Assessment' }}</Title>
+      <Meta name="description" :content="'Level 7 Assessment Description'" />
+    </Head>
 
     <v-col cols="12" md="12">
-      <h1>Welcome</h1>
-
-      <!-- <v-btn @click="handleCookies()"> Tesadznm t</v-btn> -->
+      <h1 class="text-uppercase" >Welcome - Level 7 Blog Assessment (By Mandiso Ngwenya)</h1>
     </v-col>
 
     <v-col
@@ -71,23 +68,23 @@ export default {
     posts: "",
   }),
   watch: {},
-  mounted() {
-  
-  },
+  mounted() {},
   async created() {
-    this.posts = await $fetch("http://127.0.0.1:8000/api/posts", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + this.token,
-        Accept: "application/json",
-      },
-    });
+    const token = useCookie("token");
+    if (token) {
+      this.posts = await $fetch("http://127.0.0.1:8000/api/posts", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token.value,
+          Accept: "application/json",
+        },
+      });
+    }
   },
 
   methods: {
     async handleCookies() {
-      alert("dsfjh");
       let test = await $fetch("api/token", {
         method: "POST",
         body: {
@@ -95,8 +92,8 @@ export default {
         },
       });
 
-       const token = useCookie('token');
-    console.log(token.value)
+      const token = useCookie("token");
+      console.log(token.value);
     },
   },
 };

@@ -27,8 +27,8 @@ class Post extends Model
         'publish_date'
     ];
 
-    // public function tags(): HasMany
-    // {
-    //     return $this->hasMany(PostTag::class,);
-    // }
+    public function tags(): HasMany
+    {
+        return $this->hasMany(PostTag::class);
+    }
 }

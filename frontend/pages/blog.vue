@@ -20,33 +20,23 @@ export default {
   watch: {},
   async mounted() {},
   async created() {
-    // this.post = await $fetch("http://127.0.0.1:8000/api/posts/1", {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-    // if (this.post.success) {
-    //   if (this.post.data) {
-    //     this.post = this.post.data;
-    //   }
-    // }
-  },
-  methods: {
-    async getA() {
-      this.response = await $fetch("http://127.0.0.1:8000/api/posts", {
-        method: "POST",
+    const token = useCookie("token");
+    if (token) {
+      this.data = await $fetch("http://127.0.0.1:8000/api/posts", {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
-        },
-        body: {
-          email: "mandiso0sd42@yahoo.com",
-          password: "password",
-          name: "Mandiso Ngwenya",
-          c_password: "password",
+          Authorization: "Bearer " +token.value,
+          Accept: "application/json",
         },
       });
-    },
+      if (this.data.success) {
+        this.data = this.data.data;
+      }
+    }
+  },
+  methods: {
+    
   },
 };
 </script>

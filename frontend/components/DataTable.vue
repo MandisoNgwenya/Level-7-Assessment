@@ -92,10 +92,12 @@
       <div v-else class="p-5">No results found</div>
     </div>
 
+ 
+
     <v-card v-if="data.items" class="mt-4">
-      <div class="p-2">
+      <div class="p-2 ">
         <v-row>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="12">
             <ul class="pagination">
               <NuxtLink
                 v-if="data.previous_page !== null"
