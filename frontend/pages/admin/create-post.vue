@@ -1,5 +1,11 @@
 <template>
   <v-row>
+
+        <Head>
+      <Title v-if="form.id === 0">{{ "Create new blog post - Level 7 Assessment" }}</Title>
+        <Title v-else>{{ "Edit blog post-Level 7 Assessment" }}</Title>
+      <Meta name="description" :content="'Level 7 Assessment Description'" />
+    </Head>
     <v-col cols="12" md="12">
       <h1 v-if="form.id === 0" class="text-uppercase">Create new blog post</h1>
       <h1 v-else class="text-uppercase">Edit blog post</h1>

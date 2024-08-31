@@ -1,4 +1,8 @@
 <template>
+      <Head>
+      <Title>{{ "Login - Level 7 Assessment" }}</Title>
+      <Meta name="description" :content="'Level 7 Assessment Description'" />
+    </Head>
   <v-row>
     <v-col cols="12" md="12">
       <v-sheet class="bg-blue pa-12" squared>

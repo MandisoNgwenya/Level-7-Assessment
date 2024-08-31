@@ -1,4 +1,8 @@
 <template>
+      <Head>
+      <Title>{{ "Register - Level 7 Assessment" }}</Title>
+      <Meta name="description" :content="'Level 7 Assessment Description'" />
+    </Head>
   <v-sheet class="bg-blue pa-12" squared>
     <v-col cols="12" md="12">
       <h1 class="text-uppercase">Register a new account</h1>
