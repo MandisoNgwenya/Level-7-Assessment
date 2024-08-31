@@ -179,10 +179,22 @@ class CommentController extends BaseController
         $user =  auth('sanctum')->user();
         $comment = Comment::find($request['form']['id']);
 
-    
         if ($comment->user_id == $user->id) {
-
             $comment->delete();
+            $message = 'Comment deleted successfully.';
+            $success = true;
+        } else {
+
+            $message = 'You do not have the permission to peform this action, you can only delete comments created by you.';
+            $success = false;
+            if (isset($request['form']['source'])) {
+                if ($request['form']['source']=== 'comments') {
+                    $comment->delete();
+                    $message = 'Comment deleted successfully.';
+                    $success = true;
+                }
+            }
+        
         }
         $itemsPerPage = 5;
         if (isset($request['itemsPerPage'])) {
@@ -196,10 +208,9 @@ class CommentController extends BaseController
         $comments['itemsPerPage'] = $itemsPerPage;
         if (count($comments['items'])) {
             foreach ($comments['items'] as $key => $comment) {
-
                 $comments['items'][$key]->user;
             }
         }
-        return $this->sendResponse($comments, 'Comments deleted successfully.');
+        return $this->sendResponse($comments, $message, $success);
     }
 }

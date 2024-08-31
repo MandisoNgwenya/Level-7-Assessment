@@ -211,24 +211,27 @@ export default {
         body: { form: this.form },
       });
 
-  
       if (this.response.success) {
-        let _user = await $fetch("api/user", {
-          method: "POST",
-          body: {
-            cookie: this.response.data.name,
-          },
-        });
-
-        let _token = await $fetch("api/token", {
+        let _token = await $fetch("/api/token", {
           method: "POST",
           body: {
             cookie: this.response.data.token,
           },
         });
+        let _user = await $fetch("/api/user", {
+          method: "POST",
+          body: {
+            cookie: this.response.data.name,
+          },
+        });
+        if(this.parentPage==='Register'){
+        router.push({ path: "/admin/posts" });
+        }
 
-        router.push({ path: "admin/posts" });
-   
+        if(this.parentPage==='Create User'){
+                  router.push({ path: "/admin/users" });
+        }
+
       }
     },
   },

@@ -99,11 +99,7 @@ export default {
           key: "created_at",
         },
 
-        {
-          title: "Actions",
-          key: "actions",
-          sortable: false,
-        },
+    
       ],
       items: [{}],
       itemsPerPage: 12,

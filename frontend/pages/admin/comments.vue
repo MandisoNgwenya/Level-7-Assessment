@@ -2,7 +2,6 @@
   <v-row>
     <v-col cols="12" md="12">
       <h1 class="text-uppercase">Comments</h1>
-
     </v-col>
     <v-row>
       <v-row>
@@ -38,8 +37,6 @@ export default {
     datatable: {
       parentRoute: "comments",
       links: [
- 
-
         {
           link: "/api/comment/delete",
           type: "POST",
@@ -87,12 +84,12 @@ export default {
   async created() {
     const token = useCookie("token");
 
-    let url = "http://127.0.0.1:8000/api/comments";   
-     const route = useRoute();
+    let url = "http://127.0.0.1:8000/api/comments";
+    const route = useRoute();
     this.post_id = route.query.post_id;
-  
-    if(this.post_id){
-      url = url+'?post_id='+this.post_id;
+
+    if (this.post_id) {
+      url = url + "?post_id=" + this.post_id;
     }
     if (token) {
       this.data = await $fetch(url, {
@@ -110,9 +107,7 @@ export default {
   },
   methods: {
     retrieveData(response) {
-      if (response.success) {
-        this.data = response.data;
-      }
+      this.data = response.data;
     },
   },
 };

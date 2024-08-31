@@ -7,7 +7,7 @@
     </v-col>
    
         <v-card class="mx-auto px-6 py-8" max-width="500">
-          <v-col v-if="this.errorBag" cols="12" md="12">
+          <v-col v-if="errorBag" cols="12" md="12">
             <v-alert class="bg-orange"
               ><strong class="text-uppercase">
                 Sorry we do not recognise that user</strong

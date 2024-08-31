@@ -58,6 +58,14 @@
     </v-col>
 
     <v-card class="mx-auto">
+  
+  
+      <v-col v-if="message" cols="12" md="12">
+        <v-alert class="bg-orange"
+          ><strong class="text-uppercase"> {{ message }}</strong></v-alert
+        >
+      </v-col>
+
       <v-list lines="two">
         <v-list-subheader>Comments</v-list-subheader>
 
@@ -129,6 +137,7 @@ definePageMeta({
 export default {
   components: {},
   data: () => ({
+    message: false,
     payload: {},
     post: "",
     comments: "",
@@ -218,9 +227,10 @@ export default {
       }
     },
     async deleteComment(comment) {
+      this.message = false;
       const token = useCookie("token");
       if (token) {
-        this.payload.comment = comment;
+        this.payload = comment;
         this.comments = await $fetch(
           "http://127.0.0.1:8000/api/comment/delete",
           {
@@ -233,11 +243,12 @@ export default {
             body: { form: this.payload },
           }
         );
-        if (this.comments.success) {
-          if (this.comments.data) {
-            this.comments = this.comments.data;
-          }
+        this.message = this.comments.message;
+        if (this.comments.data) {
+          this.comments = this.comments.data;
         }
+
+        console.log(this.comments);
       }
     },
     async sendComment(comment) {

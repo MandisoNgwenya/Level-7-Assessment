@@ -231,6 +231,7 @@ export default {
 
       if (type === "POST" && link.api) {
         this.payload = item;
+        this.payload.source =this.datatable.parentRoute
         const token = useCookie("token");
         url = "http://127.0.0.1:8000" + url;
         let updatedData = await $fetch(url, {
