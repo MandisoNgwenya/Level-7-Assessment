@@ -25,6 +25,7 @@ class PostController extends BaseController
     {
 
         $itemsPerPage = 12;
+
         if (isset($request['itemsPerPage'])) {
             if (!is_null($itemsPerPage) || $itemsPerPage !== 0 || $itemsPerPage !== '') {
                 $itemsPerPage = $request['itemsPerPage'];
@@ -38,7 +39,7 @@ class PostController extends BaseController
             }
         }
         $posts = Pagination::data($posts);
-
+        $posts['itemsPerPage'] = (int)$itemsPerPage;
         if(count($posts['items'])){
             foreach($posts['items'] as $key => $post){
                 $posts['items'][$key]->user = User::find($post->user_id);
@@ -182,6 +183,7 @@ class PostController extends BaseController
         }
         $posts = Post::paginate($itemsPerPage);
         $posts = Pagination::data($posts);
+        $posts['itemsPerPage'] = (int) $itemsPerPage;
         if (count($posts['items'])) {
             foreach ($posts['items'] as $key => $post) {
                 $posts['items'][$key]->user = User::find($post->user_id);

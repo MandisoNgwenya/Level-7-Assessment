@@ -1,12 +1,14 @@
 <template>
   <v-row>
     <Head>
-      <Title>{{ 'Welcome - Level 7 Assessment' }}</Title>
+      <Title>{{ "Welcome - Level 7 Assessment" }}</Title>
       <Meta name="description" :content="'Level 7 Assessment Description'" />
     </Head>
 
     <v-col cols="12" md="12">
-      <h1 class="text-uppercase" >Welcome - Level 7 Blog Assessment (By Mandiso Ngwenya)</h1>
+      <h1 class="text-uppercase">
+        Welcome - Level 7 Blog Assessment (By Mandiso Ngwenya)
+      </h1>
     </v-col>
 
     <v-col
@@ -52,6 +54,21 @@
         </v-card-text>
       </v-card>
     </v-col>
+
+    <v-col cols="12" md="12">
+      <div>
+        <!-- {{ posts.data.current_page }} -->
+        <v-btn
+          v-if="posts.success && posts.data.items.length"
+          class="m-2"
+          @click="loadMorePosts(posts.data.current_page)"
+          width="100%"
+        >
+          Load More
+        </v-btn>
+      </div>
+    </v-col>
+
     <!-- </template> -->
   </v-row>
 </template>
@@ -59,7 +76,7 @@
 <script>
 definePageMeta({
   layout: "web-layout",
-  // middleware: "auth",
+  middleware: "auth",
 });
 
 export default {
@@ -84,16 +101,28 @@ export default {
   },
 
   methods: {
-    async handleCookies() {
-      let test = await $fetch("api/token", {
-        method: "POST",
-        body: {
-          cookie: "Test=Cookie update",
-        },
-      });
-
+    async loadMorePosts(type) {
       const token = useCookie("token");
-      console.log(token.value);
+
+      if (token) {
+        if (this.posts.data.current_page >= 1) {
+          let page = 1;
+          let itemsPerPage = this.posts.data.itemsPerPage + 1;
+          let url =
+            "http://127.0.0.1:8000/api/posts?page=" +
+            page +
+            "&itemsPerPage=" +
+            itemsPerPage;
+          this.posts = await $fetch(url, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token.value,
+              Accept: "application/json",
+            },
+          });
+        }
+      }
     },
   },
 };

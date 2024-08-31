@@ -6,12 +6,18 @@
     <v-card class="mx-auto px-6 py-8" max-width="100%">
       <UserForm :form="form" :parentPage="'Register'"></UserForm>
     </v-card>
+    <v-col cols="12" md="12">
+      <div class="text-center">
+        <small>
+          Already have and account?
+          <NuxtLink type="button" :href="'/login'">
+            Login
+          </NuxtLink>
+        </small>
+      </div>
+    </v-col>
   </v-sheet>
-  <v-row>
-    <v-row>
-      <v-col cols="12" md="12" class="justify-content-center"> </v-col>
-    </v-row>
-  </v-row>
+
 </template>
 
 

@@ -124,6 +124,7 @@
 <script>
 definePageMeta({
   layout: "web-layout",
+    middleware: "auth",
 });
 export default {
   components: {},
@@ -184,15 +185,7 @@ export default {
         if (this.comments.current_page >= 1) {
           let itemsPerPage = this.comments.itemsPerPage + 5;
           let page = 1;
-          if (type === "more") {
-            itemsPerPage = this.comments.itemsPerPage + 5;
-            page = this.comments.next_page;
-          } else {
-            itemsPerPage = this.comments.itemsPerPage + 5;
-            if (this.comments.previous_page === null) {
-              page = this.comments.previous_page;
-            }
-          }
+       
           let url =
             "http://127.0.0.1:8000/api/comments?page=" +
             page +

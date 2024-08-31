@@ -1,48 +1,27 @@
 <template>
-  <v-row>
+  <v-sheet class="bg-blue pa-12" squared>
     <v-col cols="12" md="12">
-      <h1 v-if="form.id === 0">Create new user</h1>
-      <h1 v-else>Edit user</h1>
+      <h1 class="text-uppercase">Create new user</h1>
     </v-col>
-    <v-row>
-      <v-col cols="12" md="12">
-        <UserForm :form="form"></UserForm>
-      </v-col>
-    </v-row>
-  </v-row>
+    <v-card class="mx-auto px-6 py-8" max-width="100%">
+      <UserForm :form="form" :parentPage="'Create User'"></UserForm>
+    </v-card>
+  </v-sheet>
 </template>
 
 
 <script>
 definePageMeta({
   layout: "web-layout",
+  middleware: "auth",
 });
 export default {
   components: {},
-  data: () => ({
-    
-    form: {
-      id: 0,
-      confirm_password: "",
-      password: "",
-      email: "",
-      name: "",
-    },
-  }),
+  data: () => ({}),
   watch: {},
   async mounted() {},
   async created() {},
-  methods: {
-    async createPost() {
-      this.response = await $fetch("http://127.0.0.1:8000/api/create-user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: { form: this.form },
-      });
-    },
-  },
+  methods: {},
 };
 </script>
 

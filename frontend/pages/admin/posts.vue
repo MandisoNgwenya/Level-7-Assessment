@@ -2,7 +2,6 @@
   <v-row>
     <v-col cols="12" md="12">
       <h1 class="text-uppercase">Posts</h1>
-      
     </v-col>
     <v-row>
       <v-row>
@@ -123,8 +122,7 @@ export default {
     },
   }),
   watch: {},
-  async mounted() {
-  },
+  async mounted() {},
   async created() {
     const token = useCookie("token");
     if (token) {
@@ -132,7 +130,7 @@ export default {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " +token.value,
+          Authorization: "Bearer " + token.value,
           Accept: "application/json",
         },
       });

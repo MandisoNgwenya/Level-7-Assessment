@@ -25,6 +25,7 @@
           :location="$vuetify.display.mobile ? 'bottom' : undefined"
           temporary
         >
+    
           <div v-for="(item, i) in items">
             <v-btn
               v-if="_token && item.admin"
@@ -46,8 +47,8 @@
           </div>
         </v-navigation-drawer>
 
-        <v-main>
-          <v-container width="60%">
+        <v-main >
+          <v-container width="60%" class="mt-16" >
             <slot />
           </v-container>
         </v-main>
@@ -97,6 +98,8 @@ export default {
   watch: {
     group() {
       this.drawer = false;
+          const token = useCookie("token");
+    this._token = token;
     },
   },
   async mounted() {},
