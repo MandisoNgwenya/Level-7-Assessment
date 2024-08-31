@@ -7,13 +7,7 @@
       <v-row>
         <v-col cols="12" md="12">
           <v-card class="p-5">
-            <v-col cols="12" md="12">
-              <div class="mb-5">
-                <v-btn role="button" width="100%" @click.prevent="createUser()"
-                  >Create Users
-                </v-btn>
-              </div>
-            </v-col>
+  
             <v-col cols="12" md="12">
               <DataTable
                 :data="data"
