@@ -8,6 +8,22 @@
     <v-row>
       <v-col cols="12" md="6">
         <v-img
+          v-if="post.thumbnail"
+          height="500px"
+          width="100%"
+          eager
+          position="center center"
+          :src="
+            'http://127.0.0.1:8000/720526039c7ddee22606ee5a8cb2a1b2/' +
+            post.thumbnail.filename +
+            '.' +
+            post.thumbnail.ext
+          "
+          :href="post.url"
+        >
+        </v-img>
+        <v-img
+          v-else
           height="500px"
           width="100%"
           eager
@@ -233,11 +249,10 @@ export default {
             body: { form: this.payload },
           }
         );
-    this.message = this.comments.message;
+        this.message = this.comments.message;
         if (this.comments.data) {
           this.comments = this.comments.data;
         }
-    
       }
     },
     async sendComment(comment) {

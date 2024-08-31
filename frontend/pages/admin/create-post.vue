@@ -21,12 +21,12 @@
           <v-col cols="12" md="12">
             <v-file-input
               type="file"
-              @input="handleFileInput"
+              @change="getFileObject($event)"
               label="Thumbnail"
               prepend-icon="mdi-camera"
               variant="filled"
-              v-model="form.thumbnail"
-              multiple="true"
+              multiple="false"
+              id="myfile"
             ></v-file-input>
           </v-col>
           <v-col cols="12" md="12">
@@ -84,6 +84,7 @@ definePageMeta({
 export default {
   components: {},
   data: () => ({
+    post_id: 0,
     form: {
       id: 0,
       publish_date: "",
@@ -100,7 +101,10 @@ export default {
   async mounted() {},
   async created() {
     const route = useRoute();
-    this.post_id = route.query.id;
+    if(route.query.id){
+       this.post_id = route.query.id;
+    }
+   
     const token = useCookie("token");
     if (token) {
       this.post = await $fetch(
@@ -123,19 +127,35 @@ export default {
     }
   },
   methods: {
+    async getFileObject(event) {
+      this.form.thumbnail = event.target.files;
+    },
+
     async createPost() {
       const token = useCookie("token");
-      this.response = await $fetch("http://127.0.0.1:8000/api/create-post", {
+      const fileInput = document.querySelector("#myfile");
+      const formData = new FormData();
+
+      formData.append("file", fileInput.files[0]);
+      formData.append("form", JSON.stringify(this.form));
+
+      const options = {
         method: "POST",
+        body: formData,
         headers: {
-          "Content-Type": "application/json",
           Authorization: "Bearer " + token.value,
           Accept: "application/json",
         },
-        body: {
-          form: this.form,
-        },
-      });
+      };
+
+      // fetch("http://127.0.0.1:8000/api/create-post", options);
+
+      // return;
+
+      this.response = await $fetch(
+        "http://127.0.0.1:8000/api/create-post",
+        options
+      );
       if (this.response.success) {
         const router = useRouter();
         router.push({ path: "/admin/posts" });

@@ -6,13 +6,14 @@ use App\Models\PostTag;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Post;
+use App\Models\File;
 use App\Models\Tag;
 use Validator;
 use App\Http\Resources\PostResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use App\Services\Pagination;
-
+use Illuminate\Support\Str;
 
 class PostController extends BaseController
 {
@@ -40,15 +41,16 @@ class PostController extends BaseController
         }
         $posts = Pagination::data($posts);
         $posts['itemsPerPage'] = (int)$itemsPerPage;
-        if(count($posts['items'])){
-            foreach($posts['items'] as $key => $post){
+        if (count($posts['items'])) {
+            foreach ($posts['items'] as $key => $post) {
                 $posts['items'][$key]->user = User::find($post->user_id);
                 $posts['items'][$key]->publish_date = date('Y-m-d', strtotime($post->publish_date));
-             
+                $posts['items'][$key]->thumbnail ;
+                
             }
         }
-      
-      
+
+
         return $this->sendResponse($posts, 'Posts retrieved successfully.');
     }
     /**
@@ -60,7 +62,11 @@ class PostController extends BaseController
     public function store(Request $request)
     {
 
-        $input = $request->all();
+        $input = [];
+
+        $input['form'] = (array)json_decode($request['form']);
+        // dd($input,$request->all());
+        // $input = $request->all();
         $validator = Validator::make($input['form'], [
             'publish_date' => 'required',
             'body' => 'required',
@@ -76,11 +82,32 @@ class PostController extends BaseController
         }
         $user =  auth('sanctum')->user();
         $form = $input['form'];
-        $form['user_id'] = $user->id;;
-        $form['thumbnail_id'] = 1;
-        if($form['id']==0){
+        $form['user_id'] = $user->id;
+
+        $file = $request->file('file');
+        $fileSave = null;
+        if (isset($request->file)) {
+            if ($file->isValid()) {
+
+                $fileArr['ext'] = trim($file->getClientOriginalExtension());
+                $fileArr['original_filename'] = str_replace("." . $fileArr['ext'], "", $file->getClientOriginalName());
+                $fileArr['filename'] = md5(Str::random(10));
+                if ($fileArr['ext'] === 'png' || $fileArr['ext'] === 'jpg' || $fileArr['ext'] === 'jpeg') {
+                    $path = public_path() . '/720526039c7ddee22606ee5a8cb2a1b2/';
+                    $file->move($path, $fileArr['filename'] . '.' . $fileArr['ext']);
+                }
+
+                $fileSave = File::create($fileArr);
+            }
+        }
+        $form['thumbnail_id'] = 0;
+        if (!is_null($fileSave)) {
+            $form['thumbnail_id'] = $fileSave->id;;
+        }
+
+        if ($form['id'] == 0) {
             $post = Post::create($form);
-        }else{
+        } else {
             $post = Post::find($form['id']);
             $post->publish_date = $form['publish_date'];
             $post->body = $form['body'];
@@ -90,9 +117,8 @@ class PostController extends BaseController
             $post->description = $form['description'];
             $post->description = $form['description'];
             $post->save();
-     
         }
-  
+
 
         if (!is_null($post)) {
             $tags = $form['keywords'];
@@ -128,6 +154,7 @@ class PostController extends BaseController
                 }
             }
             $post->tags = implode(',', $activeTags);
+            $post->thumbnail;
 
             return $this->sendResponse(new PostResource($post), 'Post created successfully.');
         }
@@ -147,18 +174,21 @@ class PostController extends BaseController
             return $this->sendError('Post not found.');
         }
 
-        $keywords ='';
-        $tags =[];
-        if(count($post->tags)){
-            foreach($post->tags as $key => $tag){
-                if(!is_null($tag->tag)){
-                    $keywords .= $tag->tag->tag.',';
+        $keywords = '';
+        $tags = [];
+        if (count($post->tags)) {
+            foreach ($post->tags as $key => $tag) {
+                if (!is_null($tag->tag)) {
+                    $keywords .= $tag->tag->tag . ',';
                 }
                 $tags[] = $tag->tag;
             }
         }
-        $post->keywords= $keywords;
+        $post->keywords = $keywords;
         $post->tags = $tags;
+
+        $post->thumbnail;
+        // dd($post);
         return $this->sendResponse(new PostResource($post), 'Post retrieved successfully.');
     }
 
@@ -190,8 +220,8 @@ class PostController extends BaseController
                 $posts['items'][$key]->publish_date = date('Y-m-d', strtotime($post->publish_date));
             }
         }
-      
-        
+
+
         return $this->sendResponse($posts, 'Posts deleted successfully.');
     }
 }

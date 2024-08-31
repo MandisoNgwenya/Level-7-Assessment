@@ -28,6 +28,7 @@ class PostResource extends JsonResource
             'tags'=> $this->tags,
             'keywords'=> $this->keywords,
             'thumbnail_id' => $this->thumbnail_id,
+            'thumbnail'=> $this->thumbnail,
             'publish_date' => $this->publish_date,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),

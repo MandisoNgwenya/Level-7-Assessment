@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Post extends Model
@@ -30,5 +30,10 @@ class Post extends Model
     public function tags(): HasMany
     {
         return $this->hasMany(PostTag::class);
+    }
+
+    public function thumbnail(): HasOne
+    {
+        return $this->hasOne(File::class, 'id', 'thumbnail_id');
     }
 }

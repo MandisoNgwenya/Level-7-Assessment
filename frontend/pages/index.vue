@@ -20,14 +20,26 @@
     >
       <v-card class="mx-auto">
         <div class="hover-wrapper">
-          <v-img
-            height="100%"
-            eager
-            position="center center"
-            :src="'http://127.0.0.1:8000/no-image.jpg'"
-            :href="post.title"
-          >
-          </v-img>
+             <v-img
+        v-if="post.thumbnail"
+          height="500px"
+          width="100%"
+          eager
+          position="center center"
+           :src="'http://127.0.0.1:8000/720526039c7ddee22606ee5a8cb2a1b2/'+post.thumbnail.filename+'.'+post.thumbnail.ext"
+          :href="post.url"
+        >
+        </v-img>
+             <v-img
+             v-else
+          height="500px"
+          width="100%"
+          eager
+          position="center center"
+          :src="'http://127.0.0.1:8000/no-image.jpg'"
+          :href="post.url"
+        >
+        </v-img>
         </div>
         <v-card-title>{{ post.title }}</v-card-title>
         <v-card-text class="mt-2">
